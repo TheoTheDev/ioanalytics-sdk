@@ -1,0 +1,43 @@
+{
+  "name": "ioanalytics-sdk",
+  "version": "0.0.1",
+  "description": "",
+  "main": "dist/server/index.js",
+  "browser": "dist/client/index.js",
+  "types": "dist/types/index.d.ts",
+  "scripts": {
+    "build": "npm run build:all",
+    "build:all": "npm run build:client && npm run build:server",
+    "build:client": "tsc --project tsconfig.client.json",
+    "build:server": "tsc --project tsconfig.server.json",
+    "build:client:prod": "npm run build:client && npm run minify:client",
+    "build:server:prod": "npm run build:server && npm run minify:server",
+    "build:prod": "npm run build:all && npm run minify:all",
+    "minify:client": "terser dist/client/index.js -o dist/client/index.min.js --compress --mangle --source-map && terser dist/client/ioa-client-sdk.js -o dist/client/ioa-client-sdk.min.js --compress --mangle --source-map",
+    "minify:server": "terser dist/server/index.js -o dist/server/index.min.js --compress --mangle --source-map && terser dist/server/ioa-server-sdk.js -o dist/server/ioa-server-sdk.min.js --compress --mangle --source-map",
+    "minify:all": "npm run minify:client && npm run minify:server",
+    "clean": "rm -rf dist",
+    "prebuild": "npm run clean"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TheoTheDev/ioanalytics-sdk.git"
+  },
+  "keywords": [
+    "ioanalytics",
+    "SDK"
+  ],
+  "author": "theothedev",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/TheoTheDev/ioanalytics-sdk/issues"
+  },
+  "homepage": "https://github.com/TheoTheDev/ioanalytics-sdk#readme",
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "terser": "^5.19.0"
+  },
+  "files": [
+    "dist"
+  ]
+}
