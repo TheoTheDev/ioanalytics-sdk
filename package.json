@@ -1,10 +1,32 @@
 {
   "name": "ioanalytics-sdk",
-  "version": "0.0.1",
+  "version": "0.0.8",
   "description": "",
   "main": "dist/server/index.js",
   "browser": "dist/client/index.js",
-  "types": "dist/types/index.d.ts",
+  "types": "dist/server/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/server/index.d.ts",
+      "node": "./dist/server/index.js",
+      "browser": "./dist/client/index.js",
+      "default": "./dist/server/index.js"
+    },
+    "./client": {
+      "types": "./dist/client/index.d.ts",
+      "browser": "./dist/client/index.js",
+      "import": "./dist/client/index.js",
+      "require": "./dist/client/index.js",
+      "default": "./dist/client/index.js"
+    },
+    "./server": {
+      "types": "./dist/server/index.d.ts",
+      "node": "./dist/server/index.js",
+      "import": "./dist/server/index.js",
+      "require": "./dist/server/index.js",
+      "default": "./dist/server/index.js"
+    }
+  },
   "scripts": {
     "build": "npm run build:all",
     "build:all": "npm run build:client && npm run build:server",
@@ -34,10 +56,17 @@
   },
   "homepage": "https://github.com/TheoTheDev/ioanalytics-sdk#readme",
   "devDependencies": {
-    "typescript": "^5.0.0",
-    "terser": "^5.19.0"
+    "terser": "^5.19.0",
+    "typescript": "^5.0.0"
   },
   "files": [
-    "dist"
-  ]
+    "dist",
+    "client.js",
+    "client.d.ts",
+    "server.js",
+    "server.d.ts"
+  ],
+  "dependencies": {
+    "request": "^2.88.2"
+  }
 }

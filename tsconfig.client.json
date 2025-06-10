@@ -2,7 +2,8 @@
     "extends": "./tsconfig.json",
     "compilerOptions": {
         "outDir": "./dist/client",
-        "declarationDir": "./dist/client/types"
+        "module": "CommonJS",
+        "target": "ES2020"
     },
     "include": ["src/client"],
     "exclude": ["src/server", "node_modules", "dist"]

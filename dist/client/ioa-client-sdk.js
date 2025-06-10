@@ -1,4 +1,7 @@
+"use strict";
 // util functions
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.ioaClientSDK = void 0;
 const generateUid = () => {
     return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
 };
@@ -148,6 +151,10 @@ class ioaClientSDKCore {
             value: () => {
                 fetch(this.analyticsURL + '/api/stats/start', {
                     method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
                     body: JSON.stringify({
                         uid: this.user.uid,
                         projectId: this.projectId,
@@ -168,6 +175,10 @@ class ioaClientSDKCore {
             value: () => {
                 fetch(this.analyticsURL + '/api/stats/collect', {
                     method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
                     body: JSON.stringify({
                         uid: this.user.uid,
                         sessionId: this.user.sessionId,
@@ -187,6 +198,10 @@ class ioaClientSDKCore {
             value: () => {
                 fetch(this.analyticsURL + '/api/stats/ping', {
                     method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
                     body: JSON.stringify({
                         uid: this.user.uid,
                         sessionId: this.user.sessionId,
@@ -219,7 +234,7 @@ class ioaClientSDKCore {
         window.addEventListener('beforeunload', this.beforeUnload);
     }
     ;
-    init(projectId, analyticsURL) {
+    init(projectId, analyticsURL = 'https://ioanalytics.dev') {
         this.projectId = projectId;
         this.analyticsURL = analyticsURL;
         this.lastPingTime = Date.now();
@@ -294,5 +309,5 @@ class ioaClientSDKCore {
     ;
 }
 ;
-export const ioaClientSDK = new ioaClientSDKCore();
+exports.ioaClientSDK = new ioaClientSDKCore();
 //# sourceMappingURL=ioa-client-sdk.js.map

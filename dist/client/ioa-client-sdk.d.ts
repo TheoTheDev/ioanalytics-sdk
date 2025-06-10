@@ -35,7 +35,7 @@ declare class ioaClientSDKCore {
     private lastPingTime;
     private pingDelay;
     constructor();
-    init(projectId: string, analyticsURL: string): void;
+    init(projectId: string, analyticsURL?: string): void;
     setFPS(stageName: string, avgFps: number, lowFps: number): void;
     setState(state: string): void;
     newEvent(type: string, event: string): void;

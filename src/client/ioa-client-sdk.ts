@@ -131,7 +131,7 @@ class ioaClientSDKCore {
 
     };
 
-    public init ( projectId: string, analyticsURL: string ) : void {
+    public init ( projectId: string, analyticsURL: string = 'https://ioanalytics.dev' ) : void {
 
         this.projectId = projectId;
         this.analyticsURL = analyticsURL;
@@ -156,7 +156,7 @@ class ioaClientSDKCore {
         } else {
 
             this.performance.stages.push({
-                name:       stageName,
+                name:       stageName, 
                 avgFps:     avgFps,
                 minFps:     lowFps
             });
@@ -214,6 +214,10 @@ class ioaClientSDKCore {
 
         fetch( this.analyticsURL + '/api/stats/start', {
             method: 'POST',
+            headers: {
+                'Accept':       'application/json',
+                'Content-Type': 'application/json'
+            },
             body: JSON.stringify({
                 uid:        this.user.uid,
                 projectId:  this.projectId,
@@ -228,7 +232,7 @@ class ioaClientSDKCore {
 
             }
 
-        })
+        });
 
     };
 
@@ -236,6 +240,10 @@ class ioaClientSDKCore {
 
         fetch( this.analyticsURL + '/api/stats/collect', {
             method: 'POST',
+            headers: {
+                'Accept':       'application/json',
+                'Content-Type': 'application/json'
+            },
             body: JSON.stringify({
                 uid:        this.user.uid,
                 sessionId:  this.user.sessionId,
@@ -254,6 +262,10 @@ class ioaClientSDKCore {
 
         fetch( this.analyticsURL + '/api/stats/ping', {
             method: 'POST',
+            headers: {
+                'Accept':       'application/json',
+                'Content-Type': 'application/json'
+            },
             body: JSON.stringify({
                 uid:            this.user.uid,
                 sessionId:      this.user.sessionId,
