@@ -1,6 +1,6 @@
 {
   "name": "ioanalytics-sdk",
-  "version": "0.0.8",
+  "version": "0.0.11",
   "description": "",
   "main": "dist/server/index.js",
   "browser": "dist/client/index.js",
@@ -57,7 +57,8 @@
   "homepage": "https://github.com/TheoTheDev/ioanalytics-sdk#readme",
   "devDependencies": {
     "terser": "^5.19.0",
-    "typescript": "^5.0.0"
+    "typescript": "^5.0.0",
+    "@types/node": "^20.0.0"
   },
   "files": [
     "dist",
@@ -65,8 +66,5 @@
     "client.d.ts",
     "server.js",
     "server.d.ts"
-  ],
-  "dependencies": {
-    "request": "^2.88.2"
-  }
+  ]
 }

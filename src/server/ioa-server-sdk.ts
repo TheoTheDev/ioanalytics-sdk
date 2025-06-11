@@ -1,4 +1,8 @@
-import request from 'request';
+import http from 'http';
+import https from 'https';
+import { URL } from 'url';
+const httpAgent  = new http.Agent({ keepAlive: true });
+const httpsAgent = new https.Agent({ keepAlive: true });
 
 //
 
@@ -22,50 +26,68 @@ class ioaServerSDKCore {
 
     };
 
-    public newEvent ( type: string, name: string, params: any ) : void {
+    private makeRequest ( endpoint: string, payload: string ) : void {
 
-        request({
-            url: this.analyticsURL + '/api/stats/server-event',
+        const fullUrl = this.analyticsURL + endpoint;
+        const url = new URL(fullUrl);
+        const isHttps = url.protocol === 'https:';
+        const httpModule = isHttps ? https : http;
+        const agent = isHttps ? httpsAgent : httpAgent;
+
+        const opts = {
+            hostname: url.hostname,
+            port: url.port || (isHttps ? 443 : 80),
+            path: url.pathname + url.search,
             method: 'POST',
+            agent,
             headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            json: {
-                projectId: this.projectId,
-                key: this.ioaKey,
-                name: name,
-                type: type,
-                params: params
+                'Content-Type': 'application/json',
+                'Content-Length': Buffer.byteLength(payload)
             }
-        }, () => {
+        };
 
-            // nothing to do here
-
+        const req = httpModule.request(opts, res => {
+            res.on('data', () => {});
+            res.on('end', () => {});
         });
+
+        req.setTimeout(5_000, () => req.destroy());
+
+        req.on('error', () => {
+            req.destroy();
+        });
+
+        req.on('timeout', () => req.abort());
+        req.on('error', () => {/* swallow or log */});
+        req.write(payload);
+        req.end();
+
+    };
+
+    public newEvent ( type: string, name: string, params: any = {} ) : void {
+
+        const payload = JSON.stringify({
+            projectId: this.projectId,
+            key:       this.ioaKey,
+            name,
+            type,
+            params
+        });
+
+        this.makeRequest('/api/stats/server-event', payload);
 
     };
 
     public newError ( type: ErrorType, message: string ) : void {
 
-        request({
-            url: this.analyticsURL + '/api/stats/server-error',
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            json: {
-                projectId: this.projectId,
-                key: this.ioaKey,
-                type: type,
-                message: message
-            }
-        }, () => {
-
-            // nothing to do here
-
+        const payload = JSON.stringify({
+            projectId: this.projectId,
+            key:       this.ioaKey,
+            type,
+            message
         });
+
+        this.makeRequest('/api/stats/server-error', payload);
 
     };
 
