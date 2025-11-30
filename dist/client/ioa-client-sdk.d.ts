@@ -38,6 +38,7 @@ declare class ioaClientSDKCore {
     constructor();
     init(projectId: string, analyticsURL?: string): void;
     setFPS(stageName: string, avgFps: number, lowFps: number): void;
+    setPing(avgPing: number, maxPing: number): void;
     setState(state: string): void;
     newEvent(type: string, event: string): void;
     newError(type: ErrorType, error: string): void;

@@ -267,6 +267,11 @@ class ioaClientSDKCore {
         }
     }
     ;
+    setPing(avgPing, maxPing) {
+        this.performance.avgPing = avgPing;
+        this.performance.maxPing = maxPing;
+    }
+    ;
     setState(state) {
         this.user.state = state;
     }

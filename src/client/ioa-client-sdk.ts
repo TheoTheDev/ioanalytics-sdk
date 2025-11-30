@@ -172,6 +172,13 @@ class ioaClientSDKCore {
 
     };
 
+    public setPing ( avgPing: number, maxPing: number ) : void {
+
+        this.performance.avgPing = avgPing;
+        this.performance.maxPing = maxPing;
+
+    };
+
     public setState ( state: string ) : void {
 
         this.user.state = state;
