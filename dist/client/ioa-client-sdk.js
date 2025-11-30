@@ -44,6 +44,7 @@ const detectOS = () => {
 ;
 ;
 ;
+;
 // SDK core
 class ioaClientSDKCore {
     //
@@ -105,6 +106,12 @@ class ioaClientSDKCore {
             writable: true,
             value: []
         });
+        Object.defineProperty(this, "statsQueue", {
+            enumerable: true,
+            configurable: true,
+            writable: true,
+            value: []
+        });
         Object.defineProperty(this, "updateIntervalId", {
             enumerable: true,
             configurable: true,
@@ -135,7 +142,7 @@ class ioaClientSDKCore {
             configurable: true,
             writable: true,
             value: () => {
-                if (this.eventsQueue.length > 0 || this.errorsQueue.length > 0) {
+                if (this.eventsQueue.length > 0 || this.errorsQueue.length > 0 || this.statsQueue.length > 0) {
                     this.sendData();
                 }
                 if (this.lastPingTime + this.pingDelay < Date.now()) {
@@ -151,10 +158,10 @@ class ioaClientSDKCore {
             value: () => {
                 fetch(this.analyticsURL + '/api/stats/start', {
                     method: 'POST',
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    },
+                    // headers: {
+                    //     'Accept':       'application/json',
+                    //     'Content-Type': 'application/json'
+                    // },
                     body: JSON.stringify({
                         uid: this.user.uid,
                         projectId: this.projectId,
@@ -175,20 +182,22 @@ class ioaClientSDKCore {
             value: () => {
                 fetch(this.analyticsURL + '/api/stats/collect', {
                     method: 'POST',
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    },
+                    // headers: {
+                    //     'Accept':       'application/json',
+                    //     'Content-Type': 'application/json'
+                    // },
                     body: JSON.stringify({
                         uid: this.user.uid,
                         sessionId: this.user.sessionId,
                         events: this.eventsQueue,
                         errors: this.errorsQueue,
+                        stats: this.statsQueue,
                         projectId: this.projectId
                     })
                 });
                 this.eventsQueue = [];
                 this.errorsQueue = [];
+                this.statsQueue = [];
             }
         });
         Object.defineProperty(this, "sendPingData", {
@@ -198,10 +207,10 @@ class ioaClientSDKCore {
             value: () => {
                 fetch(this.analyticsURL + '/api/stats/ping', {
                     method: 'POST',
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    },
+                    // headers: {
+                    //     'Accept':       'application/json',
+                    //     'Content-Type': 'application/json'
+                    // },
                     body: JSON.stringify({
                         uid: this.user.uid,
                         sessionId: this.user.sessionId,
@@ -278,6 +287,14 @@ class ioaClientSDKCore {
         });
     }
     ;
+    newStat(type, value) {
+        this.statsQueue.push({
+            type: type,
+            value: value,
+            date: new Date()
+        });
+    }
+    ;
     detectDevice() {
         const browser = detectBrowser();
         const os = detectOS();
@@ -292,6 +309,7 @@ class ioaClientSDKCore {
         this.updateIntervalId = null;
         this.eventsQueue = [];
         this.errorsQueue = [];
+        this.statsQueue = [];
         this.performance = {
             stages: [],
             loadTime: 0,

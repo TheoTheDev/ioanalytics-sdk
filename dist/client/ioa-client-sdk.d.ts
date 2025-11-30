@@ -30,6 +30,7 @@ declare class ioaClientSDKCore {
     performance: IPerformance;
     private eventsQueue;
     private errorsQueue;
+    private statsQueue;
     private updateIntervalId;
     private updateIntervalDuration;
     private lastPingTime;
@@ -40,6 +41,7 @@ declare class ioaClientSDKCore {
     setState(state: string): void;
     newEvent(type: string, event: string): void;
     newError(type: ErrorType, error: string): void;
+    newStat(type: string, value: number): void;
     private update;
     private sendInitialData;
     private sendData;

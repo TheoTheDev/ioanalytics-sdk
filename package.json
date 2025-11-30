@@ -1,6 +1,6 @@
 {
   "name": "ioanalytics-sdk",
-  "version": "0.0.11",
+  "version": "0.0.14",
   "description": "",
   "main": "dist/server/index.js",
   "browser": "dist/client/index.js",

@@ -51,6 +51,12 @@ interface IErrorMessage {
     date:           Date;
 };
 
+interface IStatsMessage {
+    type:           string;
+    value:          number;
+    date:           Date;
+};
+
 interface IUser {
     uid:            string;
     sessionId:      string;
@@ -101,6 +107,7 @@ class ioaClientSDKCore {
 
     private eventsQueue: IEventMessage[] = [];
     private errorsQueue: IErrorMessage[] = [];
+    private statsQueue: IStatsMessage[] = [];
 
     private updateIntervalId: any = null;
     private updateIntervalDuration: number = 2000;
@@ -156,7 +163,7 @@ class ioaClientSDKCore {
         } else {
 
             this.performance.stages.push({
-                name:       stageName, 
+                name:       stageName,
                 avgFps:     avgFps,
                 minFps:     lowFps
             });
@@ -191,11 +198,21 @@ class ioaClientSDKCore {
 
     };
 
+    public newStat ( type: string, value: number ) : void {
+
+        this.statsQueue.push({
+            type:       type,
+            value:      value,
+            date:       new Date()
+        });
+
+    };
+
     //
 
     private update = () : void =>{
 
-        if ( this.eventsQueue.length > 0 || this.errorsQueue.length > 0 ) {
+        if ( this.eventsQueue.length > 0 || this.errorsQueue.length > 0 || this.statsQueue.length > 0 ) {
 
             this.sendData();
 
@@ -214,10 +231,10 @@ class ioaClientSDKCore {
 
         fetch( this.analyticsURL + '/api/stats/start', {
             method: 'POST',
-            headers: {
-                'Accept':       'application/json',
-                'Content-Type': 'application/json'
-            },
+            // headers: {
+            //     'Accept':       'application/json',
+            //     'Content-Type': 'application/json'
+            // },
             body: JSON.stringify({
                 uid:        this.user.uid,
                 projectId:  this.projectId,
@@ -240,21 +257,23 @@ class ioaClientSDKCore {
 
         fetch( this.analyticsURL + '/api/stats/collect', {
             method: 'POST',
-            headers: {
-                'Accept':       'application/json',
-                'Content-Type': 'application/json'
-            },
+            // headers: {
+            //     'Accept':       'application/json',
+            //     'Content-Type': 'application/json'
+            // },
             body: JSON.stringify({
                 uid:        this.user.uid,
                 sessionId:  this.user.sessionId,
                 events:     this.eventsQueue,
                 errors:     this.errorsQueue,
+                stats:      this.statsQueue,
                 projectId:  this.projectId
             })
         });
 
         this.eventsQueue = [];
         this.errorsQueue = [];
+        this.statsQueue = [];
 
     };
 
@@ -262,10 +281,10 @@ class ioaClientSDKCore {
 
         fetch( this.analyticsURL + '/api/stats/ping', {
             method: 'POST',
-            headers: {
-                'Accept':       'application/json',
-                'Content-Type': 'application/json'
-            },
+            // headers: {
+            //     'Accept':       'application/json',
+            //     'Content-Type': 'application/json'
+            // },
             body: JSON.stringify({
                 uid:            this.user.uid,
                 sessionId:      this.user.sessionId,
@@ -305,6 +324,7 @@ class ioaClientSDKCore {
 
         this.eventsQueue = [];
         this.errorsQueue = [];
+        this.statsQueue = [];
 
         this.performance = {
             stages:             [],
